@@ -1,1 +1,1 @@
-from backend.app.services.job_service import *
+from backend.services.job import *

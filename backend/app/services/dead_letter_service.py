@@ -20,7 +20,7 @@ from backend.app.core.exceptions import NotFoundError, ValidationError
 from backend.app.core.logger import get_logger
 from backend.app.models.dead_letter import DeadLetterQueue
 from backend.app.models.job import Job
-from backend.app.state_machine import JobStateMachine, JobStatus
+from backend.state_machine import JobStateMachine, JobStatus
 
 logger = get_logger(__name__)
 

@@ -1,4 +1,4 @@
-﻿import socket
+import socket
 from typing import AsyncGenerator
 from urllib.parse import urlparse
 
@@ -14,8 +14,9 @@ logger = get_logger(__name__)
 
 
 def is_db_reachable(url: str) -> bool:
-    """Synchronous check if database port is open (2s timeout)."""
+    """Check if database host is reachable using SSL-aware socket."""
     try:
+        import ssl as _ssl
         check_url = url
         if check_url.startswith("postgresql+asyncpg://"):
             check_url = check_url.replace("postgresql+asyncpg://", "postgresql://", 1)
@@ -24,8 +25,11 @@ def is_db_reachable(url: str) -> bool:
         parsed = urlparse(check_url)
         host = parsed.hostname or "localhost"
         port = parsed.port or 5432
-        with socket.create_connection((host, port), timeout=2.0):
-            return True
+        raw = socket.create_connection((host, port), timeout=5.0)
+        ctx = _ssl.create_default_context()
+        wrapped = ctx.wrap_socket(raw, server_hostname=host)
+        wrapped.close()
+        return True
     except Exception:
         return False
 
@@ -57,6 +61,7 @@ if not is_reachable:
         echo=False,
     )
 else:
+    logger.info("db_connection_ok", target_url=db_url[:50] + "...")
     engine = create_async_engine(
         db_url,
         echo=False,

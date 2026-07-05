@@ -1,1 +1,1 @@
-# Service for project_service
+from backend.services.org_project import *

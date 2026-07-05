@@ -1,8 +1,19 @@
 import asyncio
+import os
+import sys
 from logging.config import fileConfig
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
+
+# Ensure backend and its parent directories are in sys.path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+backend_dir = os.path.dirname(current_dir)
+parent_dir = os.path.dirname(backend_dir)
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
+if backend_dir not in sys.path:
+    sys.path.insert(0, backend_dir)
 
 # Import our configuration and metadata
 from backend.core.config import settings

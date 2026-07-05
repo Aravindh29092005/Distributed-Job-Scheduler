@@ -1,1 +1,1 @@
-from backend.app.services.auth import *
+from backend.services.auth import *

@@ -1,1 +1,1 @@
-from backend.app.repositories.job_repository import QueueRepository
+from backend.repositories.job_queue import *

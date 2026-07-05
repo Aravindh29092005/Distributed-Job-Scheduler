@@ -1,1 +1,1 @@
-from backend.app.core.exceptions import *
+from backend.core.errors import *

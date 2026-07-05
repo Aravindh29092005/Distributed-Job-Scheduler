@@ -1,1 +1,1 @@
-from backend.app.repositories.user_repository import *
+from backend.repositories.user_org import *

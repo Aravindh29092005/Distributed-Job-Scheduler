@@ -1,1 +1,1 @@
-from backend.app.core.logger import *
+from backend.core.logging import *

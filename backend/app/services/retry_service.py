@@ -1,1 +1,1 @@
-from backend.app.services.queue_service import *
+from backend.services.queue_retry import *
