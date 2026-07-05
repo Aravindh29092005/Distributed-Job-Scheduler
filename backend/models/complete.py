@@ -21,7 +21,7 @@ from sqlalchemy import (
     Column, Enum as SQLEnum
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Uuid as UUID as PG_UUID
+from sqlalchemy import Uuid as PG_UUID
 
 from backend.models.base import Base, UUIDMixin, TimestampMixin
 

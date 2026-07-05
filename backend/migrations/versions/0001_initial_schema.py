@@ -30,6 +30,7 @@ def upgrade() -> None:
         "users",
         sa.Column("id", postgresql.UUID(as_uuid=True), server_default=sa.text("uuid_generate_v4()"), nullable=False),
         sa.Column("email", sa.String(length=255), nullable=False),
+        sa.Column("full_name", sa.String(length=255), nullable=True),
         sa.Column("hashed_password", sa.String(length=255), nullable=False),
         sa.Column("is_active", sa.Boolean(), server_default=sa.text("true"), nullable=False),
         sa.Column("is_superuser", sa.Boolean(), server_default=sa.text("false"), nullable=False),

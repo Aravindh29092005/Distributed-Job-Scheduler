@@ -18,9 +18,20 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 
+def get_adapted_url() -> str:
+    """Adapt DATABASE_URL for asyncpg: swap driver and strip unsupported query params."""
+    url = settings.DATABASE_URL.strip("'\"")
+    if url.startswith("postgresql://"):
+        url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+    # asyncpg doesn't support sslmode/channel_binding query params
+    if "postgresql" in url and "?" in url:
+        url = url.split("?")[0]
+    return url
+
+
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode."""
-    url = settings.DATABASE_URL
+    url = get_adapted_url()
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -42,14 +53,14 @@ def do_run_migrations(connection) -> None:
 
 async def run_migrations_online() -> None:
     """Run migrations in 'online' mode using async connection."""
-    # Override sqlalchemy.url with dynamic database settings
     configuration = config.get_section(config.config_ini_section) or {}
-    configuration["sqlalchemy.url"] = settings.DATABASE_URL
+    configuration["sqlalchemy.url"] = get_adapted_url()
 
     connectable = async_engine_from_config(
         configuration,
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
+        connect_args={"ssl": True} if "postgresql" in get_adapted_url() else {},
     )
 
     async with connectable.connect() as connection:

@@ -14,19 +14,39 @@ logger = get_logger(__name__)
 
 
 def is_db_reachable(url: str) -> bool:
-    """Synchronous check if database port is open (1s timeout)."""
+    """Check if database host is reachable using SSL-aware socket."""
     try:
-        parsed = urlparse(url)
+        import ssl as _ssl
+        check_url = url
+        if check_url.startswith("postgresql+asyncpg://"):
+            check_url = check_url.replace("postgresql+asyncpg://", "postgresql://", 1)
+        if "?" in check_url:
+            check_url = check_url.split("?")[0]
+        parsed = urlparse(check_url)
         host = parsed.hostname or "localhost"
         port = parsed.port or 5432
-        with socket.create_connection((host, port), timeout=1.0):
-            return True
+        raw = socket.create_connection((host, port), timeout=5.0)
+        ctx = _ssl.create_default_context()
+        wrapped = ctx.wrap_socket(raw, server_hostname=host)
+        wrapped.close()
+        return True
     except Exception:
         return False
 
 
 # Resolve Database URL and connection parameters dynamically
-db_url = settings.DATABASE_URL
+raw_url = settings.DATABASE_URL.strip("'\"")
+db_url = raw_url
+if db_url.startswith("postgresql://"):
+    db_url = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+
+# Strip query parameters for asyncpg compatibility, using standard ssl=True instead
+connect_args = {}
+if "postgresql" in db_url:
+    if "?" in db_url:
+        db_url = db_url.split("?")[0]
+    connect_args = {"ssl": True}
+
 is_reachable = is_db_reachable(db_url)
 
 if not is_reachable:
@@ -41,12 +61,14 @@ if not is_reachable:
         echo=False,
     )
 else:
+    logger.info("db_connection_ok", target_url=db_url[:50] + "...")
     engine = create_async_engine(
         db_url,
         echo=False,
         pool_size=20,
         max_overflow=10,
         pool_pre_ping=True,
+        connect_args=connect_args,
     )
 
 # Async session factory
@@ -69,3 +91,4 @@ async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
             raise
         finally:
             await session.close()
+
