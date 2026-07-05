@@ -1,0 +1,6 @@
+{"sessionId":"afb2d0","location":"LoginPage.tsx:handleSubmit:start","message":"Auth submit started","data":{"mode":"register","hasEmail":true,"hasPassword":true},"timestamp":1783234415592,"hypothesisId":"A"}
+{"sessionId":"afb2d0","location":"LoginPage.tsx:handleSubmit:registerSuccess","message":"Register API success","data":{"status":200,"hasToken":true},"timestamp":1783234416228,"hypothesisId":"C"}
+{"sessionId":"afb2d0","location":"LoginPage.tsx:handleSubmit:start","message":"Auth submit started","data":{"mode":"login","hasEmail":true,"hasPassword":true},"timestamp":1783236133005,"hypothesisId":"A"}
+{"sessionId":"afb2d0","location":"LoginPage.tsx:handleSubmit:start","message":"Auth submit started","data":{"mode":"login","hasEmail":true,"hasPassword":true},"timestamp":1783236133199,"hypothesisId":"A"}
+{"sessionId":"afb2d0","location":"LoginPage.tsx:handleSubmit:loginSuccess","message":"Login API success","data":{"status":200,"hasToken":true},"timestamp":1783236133585,"hypothesisId":"C"}
+{"sessionId":"afb2d0","location":"LoginPage.tsx:handleSubmit:loginSuccess","message":"Login API success","data":{"status":200,"hasToken":true},"timestamp":1783236133915,"hypothesisId":"C"}

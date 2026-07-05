@@ -1,0 +1,2 @@
+﻿# Constants
+DEFAULT_CONCURRENCY = 10
