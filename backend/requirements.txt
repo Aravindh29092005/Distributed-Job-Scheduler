@@ -112,8 +112,7 @@ uvicorn==0.50.0
 
 wrapt==2.2.2
 
-bcrypt==4.0.1
-
 passlib[bcrypt]==1.7.4
+bcrypt==4.0.1
 
 # force rebuild
